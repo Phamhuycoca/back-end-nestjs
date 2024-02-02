@@ -8,7 +8,7 @@ import {
 import { Observable } from 'rxjs/internal/Observable';
 import { map } from 'rxjs/operators';
 import { HttpStatus } from '@nestjs/common';
-import { ApiResponse } from 'src/helpers/response';
+import { ApiResponse } from '../helpers/response';
 
 @Injectable()
 export class TransformInterceptor implements NestInterceptor {
@@ -26,8 +26,7 @@ export class TransformInterceptor implements NestInterceptor {
                     : null;
                 if (httpCode) {
                     context.switchToHttp().getResponse().status(httpCode);
-                }
-                console.log(data);
+                }         
                 return data;
 
             }),

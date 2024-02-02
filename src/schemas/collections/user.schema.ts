@@ -1,7 +1,7 @@
 import { Prop, Schema } from '@nestjs/mongoose';
 import { MongoCollection, RoloCollection } from '../collection';
 import { MongoBaseSchema } from '../base.schema';
-import { createSchemaForClass } from 'src/helpers/create.schema';
+import { createSchemaForClass } from '../../helpers/create.schema';
 export type UserDocument = SchemaDocument<User>;
 @Schema({
     timestamps: true,

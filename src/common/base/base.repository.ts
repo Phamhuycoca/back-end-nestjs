@@ -9,7 +9,7 @@ import mongoose, {
     UpdateWithAggregationPipeline,
     Types,
 } from 'mongoose';
-import { parseMongoProjection } from 'src/helpers/commonFunctions';
+import { parseMongoProjection } from '../../helpers/commonFunctions';
 import { softDeleteCondition } from './../../constant/constant';
 
 export class BaseRepository<T extends MongoBaseSchema> {

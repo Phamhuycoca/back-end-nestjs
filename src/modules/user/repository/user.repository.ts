@@ -2,12 +2,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
-import { BaseRepository } from 'src/common/base/base.repository';
-import { User, UserDocument } from 'src/schemas/collections/user.schema';
+import { BaseRepository } from '../../../common/base/base.repository';
+import { User, UserDocument } from '../../../schemas/collections/user.schema';
 import { GetUserListQuery } from '../interface/user.interface';
-import { DEFAULT_FIRST_PAGE, DEFAULT_LIMIT_FOR_PAGINATION, DEFAULT_ORDER_BY, DEFAULT_ORDER_DIRECTION, OrderDirection } from 'src/constant/constant';
+import { DEFAULT_FIRST_PAGE, DEFAULT_LIMIT_FOR_PAGINATION, DEFAULT_ORDER_BY, DEFAULT_ORDER_DIRECTION, OrderDirection } from '../../../constant/constant';
 import { softDeleteCondition } from './../../../constant/constant';
-import { parseMongoProjection } from 'src/helpers/commonFunctions';
+import { parseMongoProjection } from '../../../helpers/commonFunctions';
 import { UserAttributesForList } from '../interface/user.constant';
 
 
@@ -100,13 +100,25 @@ export class UserRepository extends BaseRepository<User> {
             throw error;
         }
     }
+    // async findOne(email: string): Promise<User | undefined> {
+    //     try {
+    //       const user = await this.userModel.findOne({ email }).exec();
+    //       return user;
+    //     } catch (error) {
+    //         this.logger.error(
+    //             'Error in UserRepository Email: ' + error,
+    //         );
+    //         throw error;
+    //     }
+    //   }
     async findOne(email: string): Promise<User | undefined> {
         try {
-          const user = await this.userModel.findOne({ email }).exec();
+          const user = await this.userModel.findOne({ email }, { email: 1 }).exec();
           return user;
         } catch (error) {
-          console.error(`Error finding user: ${error}`);
-          throw new Error('Failed to find user');
+          this.logger.error('Error in UserRepository Email: ' + error);
+          throw error;
         }
       }
+      
 }

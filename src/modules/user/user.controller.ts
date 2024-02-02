@@ -1,19 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { CreateUserDto } from './interface/user.interface';
-import { ValidationPipe } from 'src/decorators/validation';
-import { SuccessResponse } from 'src/helpers/response';
-import { BaseController } from 'src/common/base/base.controller';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CreateUserDto, GetUserListQuery, UpdateUserDto } from './interface/user.interface';
+import { ValidationPipe } from '../../decorators/validation';
+import { ErrorResponse, SuccessResponse } from '../../helpers/response';
+import { BaseController } from '../../common/base/base.controller';
+import { toObjectId } from '../../helpers/commonFunctions';
+import { HttpStatus } from '../../constant/constant';
 
 @Controller('user')
-@ApiTags('User APIs')
+@ApiTags('User API')
 
 export class UserController extends BaseController{
   constructor(private readonly userService: UserService) {
     super();
   }
-
   @ApiOperation({ summary: 'Create User' })
   @ApiBody({ type: CreateUserDto })
   @Post()
@@ -22,11 +23,94 @@ export class UserController extends BaseController{
       dto: CreateUserDto,
   ) {
       try {
-          console.log(dto);
           const result = await this.userService.createUser(dto);
           return new SuccessResponse(result);
       } catch (error) {
           this.handleError(error);
       }
   }
+
+
+  @ApiOperation({ summary: 'Update User by id' })
+  @ApiBody({ type: UpdateUserDto })
+  @Patch(':id')
+  async updateUser(
+      @Param('id') id: string,
+      @Body()
+      dto: UpdateUserDto,
+  ) {
+      try {
+          const user = await this.userService.findUserById(toObjectId(id));
+          console.log(id)
+          if (!user) {
+              return new ErrorResponse(HttpStatus.ITEM_NOT_FOUND,'Not Found');
+          }
+
+          const result = await this.userService.updateUser(
+              toObjectId(id),
+              dto,
+          );
+          return new SuccessResponse(result);
+      } catch (error) {
+          this.handleError(error);
+      }
+  }
+
+  @ApiOperation({ summary: 'Delete User by id' })
+  @Delete(':id')
+  async deleteUser(
+      @Param('id') id: string,
+  ) {
+      try {
+          const user = await this.userService.findUserById(toObjectId(id));
+
+          if (!user) {
+              return new ErrorResponse(
+                  HttpStatus.ITEM_NOT_FOUND,'Not Found'
+              );
+          }
+
+          const result = await this.userService.deleteUser(toObjectId(id));
+          return new SuccessResponse(result);
+      } catch (error) {
+          this.handleError(error);
+      }
+  }
+
+  @ApiOperation({ summary: 'Get User detail by id' })
+  @Get(':id')
+  async getUserDetail(
+      @Param('id') id: string,
+  ) {
+      try {
+          const result = await this.userService.findUserById(toObjectId(id));
+
+          if (!result) {
+              return new ErrorResponse(
+                  HttpStatus.ITEM_NOT_FOUND,'Not found'
+              );
+          }
+          return new SuccessResponse(result);
+      } catch (error) {
+          this.handleError(error);
+      }
+  }
+
+
+
+
+    @ApiOperation({ summary: 'Get User list' })
+    @Get()
+    async getUserList(
+        @Query()
+        query: GetUserListQuery,
+    ) {
+        try {
+            const result = await this.userService.findAllAndCountUserByQuery(query);
+            return new SuccessResponse(result);
+        } catch (error) {
+            throw this.handleError(error);
+        }
+    }
+
 }

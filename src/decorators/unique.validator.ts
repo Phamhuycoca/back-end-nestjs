@@ -1,4 +1,3 @@
-// src/common/decorators/unique.validator.ts
 import { Injectable } from '@nestjs/common';
 import { ValidationArguments, ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator';
 
@@ -12,7 +11,6 @@ export class UniqueValidator implements ValidatorConstraintInterface {
     const isUnique = await this.model(entity, field, value);
     return !isUnique;
   }
-
   defaultMessage(args: ValidationArguments) {
     return `${args.property} đã tồn tại`;
   }

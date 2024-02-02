@@ -1,6 +1,5 @@
-// src/common/decorators/is-unique.decorator.ts
 import { registerDecorator, ValidationOptions, ValidationArguments } from 'class-validator';
-import { UniqueValidator } from './unique.validator';
+import { UniqueValidator } from '../decorators/unique.validator';
 
 export function IsUnique(entity: string, field: string, validationOptions?: ValidationOptions) {
   return function (object: Record<string, any>, propertyName: string) {

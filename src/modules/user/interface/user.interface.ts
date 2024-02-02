@@ -1,6 +1,6 @@
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-import {IsNotEmpty, IsString, Matches } from "class-validator";
-import { CommonListQuery } from "src/constant/interfaces";
+import {IsNotEmpty, IsString, Matches, Validate } from "class-validator";
+import { CommonListQuery } from "../../../constant/interfaces";
 import { UserOrderBy } from "./user.constant";
 
 
@@ -20,7 +20,6 @@ export class CreateUserDto{
 export class UpdateUserDto {
     first_name: string;
     last_name: string;
-    email: string;
     gender?: boolean;
     password: string;
 }

@@ -1,4 +1,4 @@
-import { User } from "src/schemas/collections/user.schema";
+import { User } from "../../../schemas/collections/user.schema";
 
 export enum UserOrderBy {
     ID = 'id',

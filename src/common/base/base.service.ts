@@ -1,6 +1,6 @@
 import { Inject, Logger } from '@nestjs/common';
 import { BaseRepository } from './base.repository';
-import { toObjectId } from 'src/helpers/commonFunctions';
+import { toObjectId } from '../../helpers/commonFunctions';
 
 export class BaseService<
     T extends MongoBaseSchema = any,
