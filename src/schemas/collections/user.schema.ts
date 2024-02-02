@@ -1,7 +1,6 @@
 import { Prop, Schema } from '@nestjs/mongoose';
-import { MongoCollection } from '../collection';
+import { MongoCollection, RoloCollection } from '../collection';
 import { MongoBaseSchema } from '../base.schema';
-import { RoloCollection } from 'src/constant/constant';
 import { createSchemaForClass } from 'src/helpers/create.schema';
 export type UserDocument = SchemaDocument<User>;
 @Schema({
