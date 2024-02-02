@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateUserDto, GetUserListQuery, UpdateUserDto } from './interface/user.interface';
+import { CreateUserDto, GetUserListQuery, LoginDto, UpdateUserDto } from './interface/user.interface';
 import { ValidationPipe } from '../../decorators/validation';
 import { ErrorResponse, SuccessResponse } from '../../helpers/response';
 import { BaseController } from '../../common/base/base.controller';
@@ -113,4 +113,16 @@ export class UserController extends BaseController{
         }
     }
 
+
+    @ApiOperation({summary:'Login'})
+    @ApiBody({type:LoginDto})
+    @Post('Login')
+    async Login(@Body() dto:LoginDto){
+        try{
+            const result = await this.userService.Login(dto.email,dto.password);
+            return new SuccessResponse(result);
+        }catch (error) {
+            this.handleError(error);
+        }
+    }
 }

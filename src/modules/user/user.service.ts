@@ -1,14 +1,17 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { BaseService } from '../../common/base/base.service';
 import { User } from '../../schemas/collections/user.schema';
 import { UserRepository } from './repository/user.repository';
 import { CreateUserDto, GetUserListQuery, UpdateUserDto } from './interface/user.interface';
 import { Types } from 'mongoose';
 import { UserAttributesForDetail } from './interface/user.constant';
-
+import { JwtService } from '@nestjs/jwt';
+import * as dotnv from 'dotenv'
+import { jwtConstants } from 'src/constant/constant';
+dotnv.config()
 @Injectable()
 export class UserService extends BaseService<User, UserRepository> {
-    constructor(private readonly userRepository: UserRepository) {
+    constructor(private readonly userRepository: UserRepository,private jwtService: JwtService) {
         super(userRepository);
     }
     //Thêm
@@ -71,6 +74,37 @@ export class UserService extends BaseService<User, UserRepository> {
             this.logger.error(
                 'Error in UserService findAllAndCountUserByQuery: ' + error,
             );
+            throw error;
+        }
+    }
+
+    //Đăng nhập
+
+    async Login(email: string, password: string){
+        try{
+            const user = await this.userRepository.findOne(email);
+        if (user?.password !== password) {
+            throw new UnauthorizedException();
+        }
+        const payload = { sub: user._id, email: user.email, roles: user.role };
+        const accessToken = this.jwtService.sign(payload, {
+            secret: jwtConstants.secret,
+            expiresIn: jwtConstants.expiresIn,
+        });
+
+        const refreshToken = this.jwtService.sign(payload, {
+            secret: jwtConstants.secret,
+            expiresIn: jwtConstants.refresh_expiresIn,
+        });
+        return {
+            data:{
+             accessToken: accessToken,
+             refresh_token: refreshToken,
+             expiresIn: jwtConstants.expiresIn
+            }
+         };
+        }catch(error){
+            this.logger.error('Login Failed: ' + error);
             throw error;
         }
     }

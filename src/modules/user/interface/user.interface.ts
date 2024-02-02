@@ -23,6 +23,15 @@ export class UpdateUserDto {
     gender?: boolean;
     password: string;
 }
+
+export class LoginDto{
+    @Matches(emailRegex, { message: 'Email không đúng định dạng' })
+    @IsNotEmpty({message:'Vui lòng nhập đầy đủ thông tin'})
+    email: string;
+    @IsNotEmpty({message:'Vui lòng nhập đầy đủ thông tin'})
+    password: string;
+}
+
 export class GetUserListQuery extends CommonListQuery {
     orderBy?: UserOrderBy;
     first_name: string;

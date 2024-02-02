@@ -113,11 +113,11 @@ export class UserRepository extends BaseRepository<User> {
     //   }
     async findOne(email: string): Promise<User | undefined> {
         try {
-          const user = await this.userModel.findOne({ email }, { email: 1 }).exec();
+          const user = await this.userModel.findOne({ email }).exec();
           return user;
         } catch (error) {
-          this.logger.error('Error in UserRepository Email: ' + error);
-          throw error;
+          console.error(`Error finding user: ${error}`);
+          throw new Error('Failed to find user');
         }
       }
       

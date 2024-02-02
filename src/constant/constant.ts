@@ -151,3 +151,8 @@ export enum HttpStatus {
 }
 
 
+export const jwtConstants = {
+  secret: 'asskakskakskdasdiqweuqwiu1231829892asd',
+  expiresIn:'3600',
+  refresh_expiresIn:'1d'
+};
